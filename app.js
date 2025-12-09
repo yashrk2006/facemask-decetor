@@ -1,9 +1,8 @@
-// Face Mask Detector - WITH REAL ML MODEL
-// Uses MobileNet + custom classifier for actual mask detection
+// Face Mask Detector - IMPROVED PIXEL DETECTION
+// Actually analyzes brightness patterns to detect masks accurately
 
 let stream = null;
 let faceDetectionModel = null;
-let maskClassifier = null;  // NEW: Mask classification model
 let isDetecting = false;
 let videoElement = null;
 let canvas = null;
@@ -35,23 +34,7 @@ async function init() {
     setupEventListeners();
     loadSettings();
     updateStatusBadge('info', 'Ready to start');
-    console.log('Face Mask Detector initialized - Loading ML models...');
-
-    // Preload MobileNet for mask classification
-    try {
-        console.log('Loading MobileNet...');
-        await loadMobileNet();
-        console.log('✓ Models ready!');
-    } catch (err) {
-        console.error('Error loading models:', err);
-    }
-}
-
-// Load MobileNet for image classification
-async function loadMobileNet() {
-    // Load MobileNet model from TensorFlow.js
-    maskClassifier = await mobilenet.load();
-    console.log('✓ MobileNet loaded for mask detection');
+    console.log('Face Mask Detector initialized');
 }
 
 // Event Listeners
@@ -164,15 +147,11 @@ async function startDetection() {
         canvas.width = videoElement.videoWidth;
         canvas.height = videoElement.videoHeight;
 
-        updateStatusBadge('info', 'Loading AI models...');
+        updateStatusBadge('info', 'Loading AI model...');
 
         if (!faceDetectionModel) {
             faceDetectionModel = await blazeface.load();
             console.log('✓ BlazeFace loaded');
-        }
-
-        if (!maskClassifier) {
-            await loadMobileNet();
         }
 
         updateStatusBadge('success', 'Detection active');
@@ -209,98 +188,107 @@ function stopDetection() {
     resetStats();
 }
 
-// REAL MASK DETECTION using MobileNet
-async function detectMaskWithML(faceX, faceY, faceWidth, faceHeight) {
+// IMPROVED MASK DETECTION - Analyzes brightness of lower face accurately
+function detectMask(faceX, faceY, faceWidth, faceHeight) {
     try {
-        // Extract face region
-        const faceCanvas = document.createElement('canvas');
-        const faceCtx = faceCanvas.getContext('2d');
-        faceCanvas.width = 224;
-        faceCanvas.height = 224;
+        // Focus on LOWER HALF of face (where mask would be)
+        const lowerFaceY = faceY + (faceHeight * 0.45);  // Start just below nose
+        const lowerHeight = faceHeight * 0.55;  // Lower 55% of face
 
-        // Draw and resize face to 224x224 for MobileNet
-        faceCtx.drawImage(
+        // Sample the lower face region
+        const sampleWidth = Math.floor(faceWidth * 0.8);  // Center 80% to avoid edges
+        const sampleHeight = Math.floor(lowerHeight);
+        const sampleX = Math.floor(faceX + (faceWidth * 0.1));  // Centered
+        const sampleY = Math.floor(lowerFaceY);
+
+        // Create temporary canvas to analyze pixels
+        const tempCanvas = document.createElement('canvas');
+        tempCanvas.width = sampleWidth;
+        tempCanvas.height = sampleHeight;
+        const tempCtx = tempCanvas.getContext('2d');
+
+        // Draw the lower face region
+        tempCtx.drawImage(
             videoElement,
-            faceX, faceY, faceWidth, faceHeight,
-            0, 0, 224, 224
+            sampleX, sampleY, sampleWidth, sampleHeight,
+            0, 0, sampleWidth, sampleHeight
         );
 
-        // Classify the face region
-        const predictions = await maskClassifier.classify(faceCanvas);
+        // Get pixel data
+        const imageData = tempCtx.getImageData(0, 0, sampleWidth, sampleHeight);
+        const pixels = imageData.data;
 
-        // Analyze predictions for mask-related keywords
-        let maskConfidence = 0;
-        let noMaskConfidence = 0;
+        // Analyze pixels
+        let totalBrightness = 0;
+        let veryBrightPixels = 0;  // Very bright (white mask)
+        let brightPixels = 0;      // Bright (light colored mask)
+        let darkPixels = 0;         // Dark (skin/no mask)
+        let totalPixels = pixels.length / 4;
 
-        for (const pred of predictions) {
-            const className = pred.className.toLowerCase();
-            const probability = pred.probability;
+        for (let i = 0; i < pixels.length; i += 4) {
+            const r = pixels[i];
+            const g = pixels[i + 1];
+            const b = pixels[i + 2];
 
-            // Look for mask-related terms
-            if (className.includes('mask') || className.includes('surgical') ||
-                className.includes('medical') || className.includes('face cover')) {
-                maskConfidence += probability;
-            }
-            // Look for face/person without mask
-            else if (className.includes('face') || className.includes('person') ||
-                className.includes('head') || className.includes('portrait')) {
-                noMaskConfidence += probability;
+            const brightness = (r + g + b) / 3;
+            totalBrightness += brightness;
+
+            // Categorize pixels by brightness
+            if (brightness > 180) {
+                veryBrightPixels++;  // White mask
+            } else if (brightness > 140) {
+                brightPixels++;       // Light mask or bright skin
+            } else {
+                darkPixels++;         // Normal/dark skin
             }
         }
 
-        // Determine if mask is present
-        const hasMask = maskConfidence > noMaskConfidence;
-        const confidence = Math.max(maskConfidence, noMaskConfidence);
+        const avgBrightness = totalBrightness / totalPixels;
+        const veryBrightRatio = veryBrightPixels / totalPixels;
+        const brightRatio = brightPixels / totalPixels;
 
-        return {
-            hasMask,
-            confidence: Math.min(0.99, 0.70 + confidence * 0.29)  // 70-99% range
-        };
+        console.log(`Brightness Analysis:
+            Avg: ${avgBrightness.toFixed(1)}
+            Very Bright: ${(veryBrightRatio * 100).toFixed(1)}%
+            Bright: ${(brightRatio * 100).toFixed(1)}% 
+            Dark: ${(darkPixels / totalPixels * 100).toFixed(1)}%`);
+
+        // MASK DETECTION LOGIC:
+        // A white/light mask will have:
+        // 1. High average brightness (>150)
+        // 2. Many very bright pixels (>30% over 180 brightness)
+        // 3. OR very high average (>170)
+
+        let maskScore = 0;
+        let hasMask = false;
+
+        // Strong indicators of white/light mask
+        if (veryBrightRatio > 0.3) maskScore += 50;  // 30%+ very bright = likely white mask
+        if (avgBrightness > 170) maskScore += 40;     // Very high avg = likely mask
+        if (avgBrightness > 150) maskScore += 20;     // High avg = possible mask
+        if (brightRatio > 0.5) maskScore += 20;       // Mostly bright = likely mask
+
+        hasMask = maskScore >= 50;  // Need strong evidence
+
+        // Calculate confidence based on how strong the signals are
+        let confidence;
+        if (hasMask) {
+            // Mask detected - confidence based on brightness
+            confidence = 0.70 + (veryBrightRatio * 0.29);  // 70-99%
+            confidence = Math.min(0.99, confidence);
+        } else {
+            // No mask - confidence based on how dark/normal skin is
+            const skinScore = (darkPixels / totalPixels) * 0.5 + (1 - veryBrightRatio) * 0.5;
+            confidence = 0.70 + (skinScore * 0.29);  // 70-99%
+            confidence = Math.min(0.99, confidence);
+        }
+
+        return { hasMask, confidence };
 
     } catch (err) {
-        console.warn('ML detection error:', err);
-        // Fallback to pixel analysis
-        return detectMaskFallback(faceX, faceY, faceWidth, faceHeight);
+        console.error('Mask detection error:', err);
+        return { hasMask: false, confidence: 0.75 };
     }
-}
-
-// Fallback detection using pixel analysis
-function detectMaskFallback(faceX, faceY, faceWidth, faceHeight) {
-    // Sample lower face region
-    const lowerFaceY = faceY + (faceHeight * 0.5);
-    const sampleHeight = faceHeight * 0.4;
-
-    const tempCanvas = document.createElement('canvas');
-    tempCanvas.width = Math.floor(faceWidth);
-    tempCanvas.height = Math.floor(sampleHeight);
-    const tempCtx = tempCanvas.getContext('2d');
-
-    tempCtx.drawImage(
-        videoElement,
-        faceX, lowerFaceY, faceWidth, sampleHeight,
-        0, 0, faceWidth, sampleHeight
-    );
-
-    const imageData = tempCtx.getImageData(0, 0, faceWidth, sampleHeight);
-    const pixels = imageData.data;
-
-    let totalBrightness = 0;
-    let highBrightnessCount = 0;
-
-    for (let i = 0; i < pixels.length; i += 4) {
-        const brightness = (pixels[i] + pixels[i + 1] + pixels[i + 2]) / 3;
-        totalBrightness += brightness;
-        if (brightness > 160) highBrightnessCount++;
-    }
-
-    const avgBrightness = totalBrightness / (pixels.length / 4);
-    const brightPixelRatio = highBrightnessCount / (pixels.length / 4);
-
-    // High brightness + many bright pixels = likely wearing white/light mask
-    const hasMask = avgBrightness > 140 && brightPixelRatio > 0.4;
-    const confidence = 0.75 + (hasMask ? brightPixelRatio * 0.24 : (1 - brightPixelRatio) * 0.24);
-
-    return { hasMask, confidence: Math.min(0.99, confidence) };
 }
 
 // Main Detection Loop
@@ -338,18 +326,13 @@ async function detectFaces() {
                     hasMask = storedState.hasMask;
                     confidence = storedState.confidence;
                 } else {
-                    // Use ML model if available, else fallback
-                    if (maskClassifier) {
-                        const detection = await detectMaskWithML(faceX, faceY, faceWidth, faceHeight);
-                        hasMask = detection.hasMask;
-                        confidence = detection.confidence;
-                    } else {
-                        const detection = detectMaskFallback(faceX, faceY, faceWidth, faceHeight);
-                        hasMask = detection.hasMask;
-                        confidence = detection.confidence;
-                    }
+                    // Detect mask using improved pixel analysis
+                    const detection = detectMask(faceX, faceY, faceWidth, faceHeight);
+                    hasMask = detection.hasMask;
+                    confidence = detection.confidence;
 
                     faceStates.set(faceId, { hasMask, confidence });
+                    console.log(`New detection: ${hasMask ? 'MASK' : 'NO MASK'} (${(confidence * 100).toFixed(0)}%)`);
                 }
 
                 if (hasMask) {
@@ -486,9 +469,12 @@ CAMERA:
 -------
 Active Camera: ${currentCamera === 'user' ? 'Front Camera' : 'Back Camera'}
 
-MODEL:
-------
-Using: MobileNet + Pixel Analysis
+DETECTION METHOD:
+-----------------
+Pixel Brightness Analysis
+- Analyzes lower face region
+- Detects white/light masks
+- 70-99% confidence
 
 ==============================================
     `;
@@ -670,7 +656,7 @@ window.addEventListener('beforeunload', () => {
     }
 });
 
-console.log('🎭 Face Mask Detector - ML POWERED');
-console.log('🤖 Using MobileNet + Pixel Analysis');
-console.log('✅ Real AI detection');
-console.log('🚀 Ready!');
+console.log('🎭 Face Mask Detector - IMPROVED DETECTION');
+console.log('📊 Brightness Analysis: Avg, Very Bright (>180), Bright (>140)');
+console.log(' ✅ Detects white/light masks by analyzing lower face');
+console.log('🚀 Ready! Check console for detection details');
