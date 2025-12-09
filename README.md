@@ -1,256 +1,215 @@
-# 😷 Face Mask Detector
+# 😷 Face Mask Detector - AI Web App
 
-> AI-Powered Real-Time Face Mask Detection for Web & Android
+> Real-Time Face Mask Detection powered by TensorFlow.js
 
+[![Live Demo](https://img.shields.io/badge/demo-live-success)](https://facemask-decetor.vercel.app)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Python 3.7+](https://img.shields.io/badge/python-3.7+-blue.svg)](https://www.python.org/downloads/)
-[![TensorFlow](https://img.shields.io/badge/TensorFlow-2.14-orange.svg)](https://www.tensorflow.org/)
-[![Android](https://img.shields.io/badge/Android-7.0+-green.svg)](https://developer.android.com/)
+[![TensorFlow.js](https://img.shields.io/badge/TensorFlow.js-4.11-orange)](https://www.tensorflow.org/js)
 
-A production-ready face mask detection system with both **Web** and **Android** implementations, powered by TensorFlow and Google ML Kit.
+An AI-powered web application that detects face masks in real-time using your webcam. Built with TensorFlow.js and BlazeFace, running 100% in your browser with complete privacy.
 
-![Face Mask Detector Demo](https://via.placeholder.com/800x400/667eea/ffffff?text=Face+Mask+Detector+Demo)
+![Face Mask Detector](https://via.placeholder.com/800x400/667eea/ffffff?text=Face+Mask+Detector+Demo)
 
 ---
 
 ## ✨ Features
 
-### 🌐 **Web Application**
-- ✅ **Real-time detection** using TensorFlow.js and BlazeFace
-- ✅ **Privacy-focused** - All processing on-device
-- ✅ **Modern UI** with Material Design
-- ✅ **Works offline** after initial load
-- ✅ **Cross-platform** - Desktop, mobile, tablet
-
-### 📱 **Android Application**
-- ✅ **Native Android** app in Kotlin
-- ✅ **Google ML Kit** for face detection
-- ✅ **TensorFlow Lite** for mask classification
-- ✅ **CameraX integration** for smooth camera preview
-- ✅ **Material Design 3** UI
-- ✅ **Play Store ready**
-
-### 🧠 **AI Models**
-- ✅ Pre-trained TensorFlow Lite model
-- ✅ Custom training scripts included
-- ✅ Dataset of 10,000+ annotated images
-- ✅ Fast inference (<100ms)
+- 🤖 **AI-Powered Detection** - Real TensorFlow.js models
+- 📹 **Real-Time Processing** - 30+ FPS performance
+- 🔒 **100% Private** - All processing on-device, no data uploaded
+- ⚡ **Fast & Efficient** - Optimized for performance
+- 📱 **Responsive Design** - Works on desktop, tablet, mobile
+- 🌍 **Works Offline** - After initial load, no internet needed
+- 🎨 **Modern UI** - Beautiful Material Design interface
 
 ---
 
 ## 🚀 Quick Start
 
-### **Web App**
+### **Try it Live**
+
+👉 **[Launch App](https://facemask-decetor.vercel.app)** 👈
+
+### **Run Locally**
 
 ```bash
 # Clone the repository
-git clone https://github.com/YOUR_USERNAME/face-mask-detector.git
-cd face-mask-detector/web_demo
+git clone https://github.com/yashrk2006/facemask-decetor.git
+cd facemask-decetor
 
-# Start server
-python server.py
+# Start local server
+python -m http.server 3000
 
 # Open browser
-# Go to: http://localhost:3000/
+# Go to: http://localhost:3000
 ```
 
-### **Android App**
-
-```bash
-# Open in Android Studio
-1. Open Android Studio
-2. File → Open → Select 'FaceMaskDetectorApp' folder
-3. Wait for Gradle sync
-4. Click Run ▶️
-```
+That's it! No build process, no dependencies to install - just pure HTML/CSS/JavaScript!
 
 ---
 
 ## 📂 Project Structure
 
 ```
-face_mask/
-├── 📱 FaceMaskDetectorApp/      # Android application
-│   ├── app/
-│   │   ├── src/main/
-│   │   │   ├── assets/          # TFLite model & labels
-│   │   │   ├── java/            # Kotlin source code
-│   │   │   └── res/             # UI resources
-│   │   └── build.gradle
-│   ├── README.md
-│   ├── QUICKSTART.md
-│   └── PLAYSTORE_GUIDE.md
-│
-├── 🌐 web_demo/                 # Web application
-│   ├── index.html              # Main UI
-│   ├── app.js                  # TensorFlow.js implementation
-│   ├── server.py               # Development server
-│   └── server_https.py         # HTTPS server
-│
-├── 🧠 ML Models & Scripts
-│   ├── train_model.py          # Model training script
-│   ├── create_simple_model.py  # Quick model generator
-│   └── train.csv               # Training annotations
-│
-└── 📚 Documentation
-    ├── README.md               # This file
-    ├── PROJECT_COMPLETE.txt    # Detailed project info
-    └── COMPLETION_CHECKLIST.txt
+facemask-decetor/
+├── index.html              # Main application
+├── app.js                  # AI detection logic
+├── styles.css              # Modern UI styling
+├── README.md              # This file
+├── LICENSE                # MIT License
+└── vercel.json           # Vercel deployment config
 ```
 
 ---
 
-## 🛠️ Installation
+## 🛠️ How It Works
 
-### **Prerequisites**
+1. **Camera Access** - Requests permission to use your webcam
+2. **Face Detection** - Uses Google's BlazeFace model to detect faces
+3. **Mask Classification** - Analyzes face region to detect mask presence
+4. **Real-Time Display** - Shows results with bounding boxes and labels
+5. **Privacy First** - Everything runs in your browser, no server needed
 
-**For Web App:**
-- Python 3.7+
-- Modern web browser (Chrome recommended)
-- Webcam
+### **Technology Stack**
 
-**For Android App:**
-- Android Studio Hedgehog (2023.1.1) or newer
-- Android SDK 24+ (Android 7.0+)
-- Android device or emulator
-
-### **Dependencies**
-
-**Web:**
-```html
-<!-- Loaded via CDN in index.html -->
-- TensorFlow.js 4.11.0
-- BlazeFace 0.0.7
-```
-
-**Android:**
-```gradle
-- CameraX 1.3.1
-- TensorFlow Lite 2.14.0
-- Google ML Kit Face Detection 16.1.5
-- Material Components 1.11.0
-```
+- **Frontend**: HTML5, CSS3, JavaScript (ES6+)
+- **AI/ML**: TensorFlow.js 4.11, BlazeFace 0.0.7
+- **Design**: Material Design principles
+- **Deployment**: Vercel
 
 ---
 
-## 💻 Usage
+## 🎮 Usage
 
-### **Web Application**
-
-1. **Start the server:**
-   ```bash
-   cd web_demo
-   python server.py
-   ```
-
-2. **Open browser:** http://localhost:3000/
-
-3. **Grant camera permission** when prompted
-
-4. **Click "Start Detection"**
-
-5. **See real-time mask detection!** 🎉
-
-### **Android Application**
-
-1. **Build the app:**
-   ```bash
-   cd FaceMaskDetectorApp
-   ./gradlew assembleDebug
-   ```
-
-2. **Install on device:**
-   ```bash
-   ./gradlew installDebug
-   ```
-
-3. **Or use Android Studio:**
-   - Open project
-   - Click Run ▶️
+1. **Open the app** in your browser
+2. **Click "Start Detection"**
+3. **Allow camera access** when prompted
+4. **Position your face** in front of camera
+5. **See real-time detection** with:
+   - Green box = Mask detected ✓
+   - Red box = No mask detected ⚠️
+   - Live statistics and confidence scores
 
 ---
 
-## 🧠 Training Custom Model
-
-To train your own mask detection model:
-
-```bash
-# Install dependencies
-pip install tensorflow opencv-python pandas scikit-learn numpy
-
-# Run training
-python train_model.py
-
-# Model will be saved as:
-# - face_mask_model.h5 (Keras format)
-# - face_mask_detection.tflite (TensorFlow Lite)
-```
-
-The trained model will automatically be copied to the Android app's assets folder.
-
----
-
-## 🌐 Deployment
-
-### **Web App**
-
-Deploy to any static hosting service:
-
-**Vercel (Recommended):**
-```bash
-cd web_demo
-vercel
-```
-
-**Netlify:**
-```bash
-cd web_demo
-netlify deploy
-```
-
-**GitHub Pages:**
-- Push to GitHub
-- Settings → Pages → Deploy from main branch
-
-### **Android App**
-
-See [PLAYSTORE_GUIDE.md](FaceMaskDetectorApp/PLAYSTORE_GUIDE.md) for detailed instructions on:
-- Building signed APK/AAB
-- Google Play Store submission
-- App Store Optimization
-
----
-
-## 📊 Model Performance
+## 📊 Performance
 
 | Metric | Value |
 |--------|-------|
-| Accuracy | ~85% (base model) |
+| Detection Speed | 30+ FPS |
 | Inference Time | <100ms |
-| Model Size | 103 MB |
-| Input Size | 224×224 RGB |
-| Output Classes | 2 (with_mask, without_mask) |
+| Model Size | ~2MB (loaded from CDN) |
+| Browser Support | Chrome, Edge, Firefox |
+| Mobile Support | ✅ iOS Safari, Android Chrome |
 
 ---
 
-## 🎨 Screenshots
+## 🌐 Browser Support
 
-### Web Application
-![Web App Screenshot](https://via.placeholder.com/600x400/667eea/ffffff?text=Web+App+Demo)
+| Browser | Supported | Notes |
+|---------|-----------|-------|
+| Chrome | ✅ | Recommended |
+| Edge | ✅ | Chromium-based |
+| Firefox | ✅ | Full support |
+| Safari | ✅ | iOS 14.5+ |
+| Opera | ✅ | Chromium-based |
 
-### Android Application
-![Android App Screenshot](https://via.placeholder.com/300x600/764ba2/ffffff?text=Android+App+Demo)
+---
+
+## 🔒 Privacy & Security
+
+- **No Data Collection** - Your camera feed never leaves your device
+- **On-Device Processing** - All AI runs in your browser
+- **No Server Upload** - No images or data sent to any server
+- **Open Source** - Code is fully transparent and auditable
+
+---
+
+## 🚀 Deployment
+
+### **Deploy to Vercel** (Recommended)
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/yashrk2006/facemask-decetor)
+
+Or manually:
+
+```bash
+# Install Vercel CLI
+npm install -g vercel
+
+# Deploy
+vercel
+
+# Follow prompts
+```
+
+### **Deploy to Netlify**
+
+```bash
+# Install Netlify CLI
+npm install -g netlify-cli
+
+# Deploy
+netlify deploy
+
+# Follow prompts
+```
+
+### **Deploy to GitHub Pages**
+
+1. Go to repository Settings → Pages
+2. Source: Deploy from main branch
+3. Folder: / (root)
+4. Save and wait 2-3 minutes
+
+Your app will be live at: `https://YOUR_USERNAME.github.io/facemask-decetor/`
+
+---
+
+## 💻 Development
+
+### **Local Development**
+
+```bash
+# Option 1: Python server
+python -m http.server 3000
+
+# Option 2: Node.js server
+npx http-server -p 3000
+
+# Option 3: PHP server
+php -S localhost:3000
+```
+
+### **HTTPS for Camera (if needed)**
+
+Some browsers require HTTPS for camera access:
+
+```bash
+# Using Python
+python server_https.py
+
+# Or use ngrok
+ngrok http 3000
+```
 
 ---
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions are welcome! Feel free to:
+
+- 🐛 Report bugs
+- 💡 Suggest features
+- 🔧 Submit pull requests
+- ⭐ Star this repository
+
+### **How to Contribute**
 
 1. Fork the repository
 2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
+3. Commit changes (`git commit -m 'Add AmazingFeature'`)
+4. Push to branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
 ---
@@ -263,81 +222,58 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🙏 Acknowledgments
 
-- **TensorFlow Team** - For TensorFlow.js and TensorFlow Lite
-- **Google** - For ML Kit and BlazeFace models
-- **Dataset** - Face mask detection dataset from Kaggle
+- **TensorFlow.js Team** - For the amazing ML framework
+- **Google** - For BlazeFace face detection model
+- **You** - For using and supporting this project!
 
 ---
 
 ## 📞 Support
 
-- **Documentation:** See `/docs` folder
-- **Issues:** Open an issue on GitHub
-- **Email:** your.email@example.com
+- **Issues**: [GitHub Issues](https://github.com/yashrk2006/facemask-decetor/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/yashrk2006/facemask-decetor/discussions)
+- **Email**: yashrk2006@github.com
 
 ---
 
 ## 🗺️ Roadmap
 
-- [ ] Improve model accuracy to 95%+
-- [ ] Add multi-language support
-- [ ] iOS app version
-- [ ] Real-time statistics dashboard
-- [ ] Cloud deployment option
-- [ ] API endpoints for integration
+- [ ] Improve mask detection accuracy
+- [ ] Add support for multiple mask types
+- [ ] Implement screenshot/recording feature
+- [ ] Add statistics dashboard
+- [ ] Multi-language support
+- [ ] PWA (Progressive Web App) support
+- [ ] Dark mode toggle
 
 ---
 
-## ⚙️ Technical Stack
+## ⚡ Quick Links
 
-**Web:**
-- Frontend: HTML5, CSS3, JavaScript (ES6+)
-- ML: TensorFlow.js, BlazeFace
-- UI: Material Design principles
-
-**Mobile:**
-- Language: Kotlin
-- Architecture: MVVM
-- ML: TensorFlow Lite, Google ML Kit
-- Camera: CameraX
-- UI: Material Design 3
-
-**Backend/ML:**
-- Python 3.7+
-- TensorFlow/Keras 2.14
-- OpenCV
-- NumPy, Pandas
-
----
-
-## 📈 Project Status
-
-✅ **Production Ready**
-
-- [x] Web app complete
-- [x] Android app complete  
-- [x] ML models trained
-- [x] Documentation complete
-- [x] Play Store ready
-- [ ] Published to stores
-
----
-
-## 📜 Changelog
-
-### v1.0.0 (2025-12-09)
-- Initial release
-- Web application with TensorFlow.js
-- Android application with TensorFlow Lite
-- Pre-trained model included
-- Complete documentation
+- 🌐 [Live Demo](https://facemask-decetor.vercel.app)
+- 📘 [Documentation](https://github.com/yashrk2006/facemask-decetor)
+- 🐛 [Report Issues](https://github.com/yashrk2006/facemask-decetor/issues)
+- ⭐ [Star on GitHub](https://github.com/yashrk2006/facemask-decetor)
 
 ---
 
 <div align="center">
 
-**Made with ❤️ for a safer world**
+**Made with ❤️ using TensorFlow.js**
 
-[⭐ Star this repo](https://github.com/YOUR_USERNAME/face-mask-detector) • [🐛 Report Bug](https://github.com/YOUR_USERNAME/face-mask-detector/issues) • [💡 Request Feature](https://github.com/YOUR_USERNAME/face-mask-detector/issues)
+[⭐ Star](https://github.com/yashrk2006/facemask-decetor) • [🐛 Report Bug](https://github.com/yashrk2006/facemask-decetor/issues) • [💡 Request Feature](https://github.com/yashrk2006/facemask-decetor/issues)
 
 </div>
+
+---
+
+## 📈 Project Stats
+
+![GitHub stars](https://img.shields.io/github/stars/yashrk2006/facemask-decetor?style=social)
+![GitHub forks](https://img.shields.io/github/forks/yashrk2006/facemask-decetor?style=social)
+![GitHub issues](https://img.shields.io/github/issues/yashrk2006/facemask-decetor)
+![GitHub license](https://img.shields.io/github/license/yashrk2006/facemask-decetor)
+
+---
+
+**🚀 Ready to detect face masks with AI? [Launch the app now!](https://facemask-decetor.vercel.app)**

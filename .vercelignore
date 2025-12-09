@@ -1,0 +1,27 @@
+# Large files
+*.h5
+*.tflite
+*.pb
+
+# Dataset
+Medical mask/
+
+# Android project
+FaceMaskDetectorApp/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Git
+.git/
+.gitignore
+
+# Documentation (keep essential ones)
+PROJECT_COMPLETE.txt
+COMPLETION_CHECKLIST.txt
+GITHUB_SUCCESS.txt
+
+# Build artifacts
+.gradle/
+build/

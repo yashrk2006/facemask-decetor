@@ -16,41 +16,27 @@ env/
 *.tflite
 *.pb
 
-# Large Dataset Files (too large for GitHub)
+# Large Dataset Files
 Medical mask/
 *.zip
 *.tar.gz
 
-# Android Build Files
+# Android (Removed - Web only project)
+FaceMaskDetectorApp/
 *.iml
 .gradle/
 local.properties
 .idea/
 .DS_Store
-/build
-/captures
-.externalNativeBuild
-.cxx
 *.apk
 *.aab
 *.ap_
 *.dex
 *.class
-proguard/
-*.keystore
-
-# Android Studio
-FaceMaskDetectorApp/.gradle/
-FaceMaskDetectorApp/build/
-FaceMaskDetectorApp/app/build/
-FaceMaskDetectorApp/local.properties
-FaceMaskDetectorApp/.idea/
 
 # Logs
 *.log
 npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
 
 # OS Files
 .DS_Store
@@ -67,13 +53,10 @@ Thumbs.db
 *.swp
 *~
 
-# Web Demo Server Artifacts
-web_demo/*.pem
-web_demo/*.key
+# Old demo folder (moved to root)
+web_demo/
 
-# Large CSV files (optional - keep small ones)
-# Uncomment if CSV is too large
-# *.csv
-
-# Jupyter Notebooks checkpoints
-.ipynb_checkpoints/
+# Build artifacts
+.vercel
+.next/
+node_modules/
