@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Face Mask Detector</string>
+    <string name="camera_permission_required">Camera permission is required for face mask detection</string>
+    <string name="detection_results">Detection Results</string>
+    <string name="no_faces_detected">No faces detected</string>
+    <string name="position_face">Position your face in front of the camera</string>
+    <string name="wear_mask">Please wear a mask</string>
+    <string name="mask_detected">Mask detected</string>
+    <string name="faces_detected">Faces Detected: %d</string>
+    <string name="with_mask">With Mask: %d</string>
+    <string name="without_mask">Without Mask: %d</string>
+</resources>
